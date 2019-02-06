@@ -35,6 +35,8 @@ args = {
     'certbot_path': os.environ.get('CERTBOT_PATH', '/etc/letsencrypt'),
     'certbot_challenge': os.environ.get('CERTBOT_CHALLENGE', 'http'),
     'certbot_webroot_path': CERTBOT_WEBROOT_PATH,
+    'certbot_cloudflare_config': os.environ.get('CERTBOT_AUTH_CONFIG'),
+    'certbot_cloudflare_timeout': os.environ.get('CERTBOT_TIMEOUT', '30'),
     'certbot_options': os.environ.get('CERTBOT_OPTIONS', ''),
     'certbot_manual_auth_hook': os.environ.get('CERTBOT_MANUAL_AUTH_HOOK'),
     'certbot_manual_cleanup_hook': os.environ.get('CERTBOT_MANUAL_CLEANUP_HOOK'),

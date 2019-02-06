@@ -11,13 +11,15 @@ class CertbotClient():
         self.manual_auth_hook = kwargs.get('manual_auth_hook')
         self.manual_cleanup_hook = kwargs.get('manual_cleanup_hook')
         self.options = kwargs.get('options', "")
+        self.cloudflare_config = kwargs.get('certbot_cloudflare_config')
+        self.cloudflare_timeout = kwargs.get('certbot_cloudflare_timeout')
 
         if self.challenge not in ("http", "dns"):
             raise Exception('required argument "challenge" not set.')
         if self.challenge == "http" and self.webroot_path is None:
             raise Exception('required argument "webroot_path" not set. Required when using challenge "http"')
-        if self.challenge == "dns" and (self.manual_auth_hook is None or self.manual_cleanup_hook is None):
-            raise Exception('required argument "manual_auth_hook" or "manual_manual_hook" not set. Required when using challenge "dns"')
+        if self.challenge == "dns" and ((self.manual_auth_hook is None or self.manual_cleanup_hook is None) or (self.cloudflare_config is None )):
+            raise Exception('required argument "manual_auth_hook", "manual_manual_hook" or "cloudflare_config" not set. Required when using challenge "dns"')
 
 
     def run(self, cmd):
@@ -55,8 +57,10 @@ class CertbotClient():
         c = ''
         if self.challenge == 'http':
             c = "--webroot --webroot-path {}".format(self.webroot_path)
-        if self.challenge == 'dns':
+        if self.challenge == 'dns' and self.cloudflare_config is None:
             c = "--manual --manual-public-ip-logging-ok --preferred-challenges dns --manual-auth-hook {} --manual-cleanup-hook {}".format(self.manual_auth_hook, self.manual_cleanup_hook)
+        if self.challenge == 'dns' and self.cloudflare_config is not None:
+            c = "--preferred-challenges dns --dns-cloudflare --dns-cloudflare-credentials {} --dns-cloudflare-propagation-seconds {}".format(self.cloudflare_config, self.cloudflare_timeout)
 
         output, error, code = self.run("""certbot certonly \
                     --agree-tos \
