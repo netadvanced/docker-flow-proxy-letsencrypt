@@ -11,8 +11,8 @@ class CertbotClient():
         self.manual_auth_hook = kwargs.get('manual_auth_hook')
         self.manual_cleanup_hook = kwargs.get('manual_cleanup_hook')
         self.options = kwargs.get('options', "")
-        self.cloudflare_config = kwargs.get('certbot_cloudflare_config')
-        self.cloudflare_timeout = kwargs.get('certbot_cloudflare_timeout')
+        self.certbot_cloudflare_config = kwargs.get('certbot_cloudflare_config')
+        self.certbot_cloudflare_timeout = kwargs.get('certbot_cloudflare_timeout')
 
         if self.challenge not in ("http", "dns"):
             raise Exception('required argument "challenge" not set.')
