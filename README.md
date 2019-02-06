@@ -6,6 +6,10 @@
 
 Join the #df-letsencrypt Slack channel in [DevOps20](http://slack.devops20toolkit.com/) and ping me (@nibor) if you have any questions, suggestions, or problems.
 
+**NOTE**: I modified this App.py to use with CloudFlare DNS challenge, will keep working and cleaning it to allow it to be used in a more generic way, maybe even with other DNS providers using the same principle....
+There a few bugs in the original version that I wish to remove: typically cleanup secrets on service removal.
+Also, the current version won't check for manual hooks properly, this is also to be added...
+
 ## Concept
 
 The mecanism is mostly inspired by the [JrCs/docker-letsencrypt-nginx-proxy-companion](https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion) designed for [jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy).
