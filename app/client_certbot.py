@@ -19,7 +19,7 @@ class CertbotClient():
         if self.challenge == "http" and self.webroot_path is None:
             raise Exception('required argument "webroot_path" not set. Required when using challenge "http"')
         if self.challenge == "dns" and ((self.manual_auth_hook is None or self.manual_cleanup_hook is None) or (self.cloudflare_config is None )):
-            raise Exception('required argument "manual_auth_hook", "manual_manual_hook" or "cloudflare_config" not set. Required when using challenge "dns"')
+            raise Exception('required argument "manual_auth_hook", "manual_cleanup_hook" or "cloudflare_config" not set. Required when using challenge "dns"')
 
 
     def run(self, cmd):

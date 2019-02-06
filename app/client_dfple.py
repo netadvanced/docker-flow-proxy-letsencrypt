@@ -29,7 +29,9 @@ class DFPLEClient():
             webroot_path=kwargs.get('certbot_webroot_path'),
             options=kwargs.get('certbot_options', ''),
             manual_auth_hook=kwargs.get('certbot_manual_auth_hook'),
-            manual_cleanup_hook=kwargs.get('certbot_manual_cleanup_hook')
+            manual_cleanup_hook=kwargs.get('certbot_manual_cleanup_hook'),
+            cloudflare_config=kwargs.get('certbot_cloudflare_config'),
+            cloudflare_timeout=kwargs.get('certbot_cloudflare_timeout')
             )
         self.certbot_folder = kwargs.get('certbot_path')
 
