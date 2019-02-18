@@ -7,7 +7,6 @@ from client_dfp import DockerFlowProxyAPIClient
 import logging
 logger = logging.getLogger('letsencrypt')
 
-
 combined_cert_type = ('combined', 'pem')
 cert_types = [
     combined_cert_type,
@@ -34,9 +33,7 @@ class DFPLEClient():
             certbot_cloudflare_timeout=kwargs.get('certbot_cloudflare_timeout')
             )
         self.certbot_folder = kwargs.get('certbot_path')
-
         self.dfp_service_name = kwargs.get('dfp_service_name', None)
-
         self.dfp_client = DockerFlowProxyAPIClient()
 
         # self.domains = kwargs.get('domains', [])
@@ -78,11 +75,13 @@ class DFPLEClient():
 
     def get_secret_name_short(self, name):
         secret_name = name[-self.size_secret:]
+        logger.debug('get_secret_name_short {}'.format(secret_name))
         return secret_name
 
     def get_secret_name(self, name):
         secret_name = self.get_secret_name_short(name)
         secret_name += '-{}'.format(datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        logger.debug('get_secret_name {}'.format(secret_name))
         return secret_name
 
     def service_update_secrets(self, service, secrets):
