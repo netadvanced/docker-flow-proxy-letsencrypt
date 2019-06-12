@@ -17,8 +17,10 @@ LEVELS = {'debug': logging.DEBUG,
           'error': logging.ERROR,
           'critical': logging.CRITICAL}
 
-logging.basicConfig(level=logging.ERROR, format="%(asctime)s;%(levelname)s;%(message)s")
-logging.getLogger('letsencrypt').setLevel(LEVELS[os.environ.get('LOG', 'info').lower()])
+logging.basicConfig(level=logging.ERROR,
+                    format="%(asctime)s;%(levelname)s;%(message)s")
+logging.getLogger('letsencrypt').setLevel(
+    LEVELS[os.environ.get('LOG', 'info').lower()])
 logger = logging.getLogger('letsencrypt')
 
 CERTBOT_WEBROOT_PATH = os.environ.get('CERTBOT_WEBROOT_PATH', '/opt/www')
@@ -49,10 +51,12 @@ client = DFPLEClient(**args)
 
 app = Flask(__name__)
 
+
 @app.route("/.well-known/acme-challenge/<path>")
 def acme_challenge(path):
     return send_from_directory(CERTBOT_WEBROOT_PATH,
-        ".well-known/acme-challenge/{}".format(path))
+                               ".well-known/acme-challenge/{}".format(path))
+
 
 @app.route("/v<int:version>/docker-flow-proxy-letsencrypt/reconfigure")
 def reconfigure(version):
@@ -61,7 +65,8 @@ def reconfigure(version):
     args = request.args
 
     if version != 1:
-        logger.error('Unable to use version : {}. Forwarding initial request to docker-flow-proxy service.'.format(version))
+        logger.error(
+            'Unable to use version : {}. Forwarding initial request to docker-flow-proxy service.'.format(version))
     else:
 
         logger.info('request for service: {}'.format(args.get('serviceName')))
@@ -80,7 +85,8 @@ def reconfigure(version):
                 if isinstance(testing, basestring):
                     testing = True if testing.lower() == 'true' else False
 
-            client.process(args['letsencrypt.host'].split(','), args['letsencrypt.email'], testing=testing)
+            client.process(args['letsencrypt.host'].split(
+                ','), args['letsencrypt.email'], testing=testing)
 
     # proxy requests to docker-flow-proxy
     # sometimes we can get an error back from DFP, this can happen when DFP is not fully loaded.
@@ -101,6 +107,7 @@ def reconfigure(version):
         time.sleep(os.environ.get('RETRY_INTERVAL', 5))
 
     return "OK"
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080, debug=False, threaded=True)
