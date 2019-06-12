@@ -12,9 +12,8 @@ docker network create --driver overlay proxy
 docker volume create [--driver <your_favorite_volume_driver>] le-certs
 ```
 
-
 !!! info
-	You also need to setup your DNS provider to redirect DNS hostnames to the correct hosts. In this example we will use **.example.com** domain name.
+You also need to setup your DNS provider to redirect DNS hostnames to the correct hosts. In this example we will use **.example.com** domain name.
 
 ## The stack
 
@@ -40,11 +39,9 @@ This will create and start the `docker-flow-proxy-letsencrypt` service in the **
 This service will be registered as a proxied service by `docker-flow-proxy` using labels **com.df.notify**, **com.df.distribute**, **com.df.servicePath**, **com.df.port**. This allows `docker-flow-proxy-letsencrypt` to answer to the ACME challenge performed by letsencrypt.
 
 !!! info
-	During this tutorial, we recommend you to use the **CERTBOT_OPTION=--staging** environment variable that will use the staging api of letsencrypt. You will not hit rate limits problems in case your something go wrong (DFPLE side or your services). This will generate untrusted certificate. When everything is correctly working, remove the environment variable and real certificates will be generated.
-
+During this tutorial, we recommend you to use the **CERTBOT_OPTION=--staging** environment variable that will use the staging api of letsencrypt. You will not hit rate limits problems in case your something go wrong (DFPLE side or your services). This will generate untrusted certificate. When everything is correctly working, remove the environment variable and real certificates will be generated.
 
 ### docker-flow-proxy stack
-
 
 Create a volume for **/certs** folder which contains all certificates registered by `docker-flow-proxy`. This will enable persistent certificates on DFP side.
 
@@ -80,9 +77,8 @@ docker service create --name proxy_swarm-listener \
 
 The relevant information here are that :
 
- * we plug the **dfp-certs** volume on `docker-flow-proxy` to keep persistent certificates on DFP side (in case the service is recreated),
- * we trick the `docker-flow-swarm-listener` environment variable **DF_NOTIFY_CREATE_SERVICE_URL** to notify the `docker-flow-proxy-letsencrypt` when a new service is created. The DFPLE service will generate certificated if needed and then forward the request to `docker-flow-proxy` to get back in the standard flow.
-
+- we plug the **dfp-certs** volume on `docker-flow-proxy` to keep persistent certificates on DFP side (in case the service is recreated),
+- we trick the `docker-flow-swarm-listener` environment variable **DF_NOTIFY_CREATE_SERVICE_URL** to notify the `docker-flow-proxy-letsencrypt` when a new service is created. The DFPLE service will generate certificated if needed and then forward the request to `docker-flow-proxy` to get back in the standard flow.
 
 ### services
 
@@ -90,8 +86,8 @@ Now you are ready to play with the proxy stack with automatic letsencrypt suppor
 
 You need to set deployment labels to enable let's encrypt support for each proxied services:
 
-  * com.df.letsencrypt.host
-  * com.df.letsencrypt.email
+- com.df.letsencrypt.host
+- com.df.letsencrypt.email
 
 **com.df.letsencrypt.host** generally match the **com.df.serviceDomain** label.
 
@@ -107,7 +103,7 @@ docker service create --name whoami \
 	--label com.df.srcPort=443 \
 	--label com.df.port=8000 \
 	--label com.df.letsencrypt.host=whoami.example.com \
-	--label com.df.letsencrypt.email=me@example.com \
+	--label com.df.letsencrypt.email=meATexample.com \
 	jwilder/whoami
 ```
 

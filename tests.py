@@ -148,7 +148,7 @@ class Scenario():
                 "com.df.distribute": "true",
                 "com.df.serviceDomain": "{0}.{1},{0}2.{1}".format(self.test_name, self.base_domain),
                 "com.df.letsencrypt.host": "{0}.{1},{0}2.{1}".format(self.test_name, self.base_domain),
-                "com.df.letsencrypt.email": "test@test.com",
+                "com.df.letsencrypt.email": "testATtest.com",
                 "com.df.servicePath": "/",
                 "com.df.srcPort": "443",
                 "com.df.port": "8000",

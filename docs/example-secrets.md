@@ -94,7 +94,7 @@ services:
         - com.df.srcPort=443
         - com.df.port=8000
         - com.df.letsencrypt.host=domain.com
-        - com.df.letsencrypt.email=email@domain.com
+        - com.df.letsencrypt.email=emailATdomain.com
 networks:
   proxy:
     external: true
