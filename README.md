@@ -1,3 +1,9 @@
+## Fork
+**NOTE**: I modified this App.py to use with CloudFlare DNS challenge, will keep working and cleaning it to allow it to be used in a more generic way, maybe even with other DNS providers using the same principle....
+There a few bugs in the original version that I wish to remove: typically cleanup secrets on service removal.
+Also, the current version won't check for manual hooks properly, this is also to be added...
+
+
 # Docker Flow Proxy Letsencrypt
 
 [![Build Status](https://travis-ci.org/n1b0r/docker-flow-proxy-letsencrypt.svg?branch=master)](https://travis-ci.org/n1b0r/docker-flow-proxy-letsencrypt)
@@ -5,10 +11,6 @@
 `docker-flow-proxy-letsencrypt` is a `docker-flow-proxy` companion that automatically create and renew certificates for your swarm services using [letsencrypt](https://letsencrypt.org/).
 
 Join the #df-letsencrypt Slack channel in [DevOps20](http://slack.devops20toolkit.com/) and ping me (@nibor) if you have any questions, suggestions, or problems.
-
-**NOTE**: I modified this App.py to use with CloudFlare DNS challenge, will keep working and cleaning it to allow it to be used in a more generic way, maybe even with other DNS providers using the same principle....
-There a few bugs in the original version that I wish to remove: typically cleanup secrets on service removal.
-Also, the current version won't check for manual hooks properly, this is also to be added...
 
 ## Concept
 
