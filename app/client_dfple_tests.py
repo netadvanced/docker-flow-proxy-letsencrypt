@@ -66,7 +66,7 @@ class VolumeTestCase(DFPLEClientTestCase):
 		DFPLEClientTestCase.setUp(self)
 
 		self.domains = ['site.domain.com']
-		self.email = 'email@domail.com'
+		self.email = 'email at domail.com'
 		self.client_attrs = {
 			'certbot_path': self.certbot_path,
 			'certbot_challenge': 'http',
@@ -132,7 +132,7 @@ class SecretsTestCase(DFPLEClientTestCase):
 		DFPLEClientTestCase.setUp(self)
 
 		self.domains = ['site.domain.com']
-		self.email = 'email@domail.com'
+		self.email = 'email at domail.com'
 		self.client_attrs = {
 			'certbot_path': self.certbot_path,
 			'certbot_challenge': 'http',
