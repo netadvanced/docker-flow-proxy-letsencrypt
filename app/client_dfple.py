@@ -13,6 +13,7 @@ cert_types = [
     ('fullchain', 'crt'),
     ('privkey', 'key')]
 
+
 class DFPLEClient():
 
     def __init__(self, **kwargs):
@@ -31,7 +32,7 @@ class DFPLEClient():
             manual_cleanup_hook=kwargs.get('certbot_manual_cleanup_hook'),
             certbot_cloudflare_config=kwargs.get('certbot_cloudflare_config'),
             certbot_cloudflare_timeout=kwargs.get('certbot_cloudflare_timeout')
-            )
+        )
         self.certbot_folder = kwargs.get('certbot_path')
         self.dfp_service_name = kwargs.get('dfp_service_name', None)
         self.dfp_client = DockerFlowProxyAPIClient()
@@ -45,13 +46,13 @@ class DFPLEClient():
 
         # self.initial_checks()
 
-
     def certs(self, domains):
         certs = {}
         for domain in domains:
             certs[domain] = []
             for cert_type, cert_extension in cert_types:
-                dest_file = os.path.join(self.certbot_folder, "{}.{}".format(domain, cert_extension))
+                dest_file = os.path.join(
+                    self.certbot_folder, "{}.{}".format(domain, cert_extension))
                 if os.path.exists(dest_file):
                     certs[domain].append(dest_file)
         return certs
@@ -60,7 +61,8 @@ class DFPLEClient():
         secrets = []
         attrs = {}
         if domain is not None:
-            attrs['filters'] = {"name": self.get_secret_name_short('{}.pem'.format(domain))}
+            attrs['filters'] = {
+                "name": self.get_secret_name_short('{}.pem'.format(domain))}
         return self.docker_client.secrets.list(**attrs)
 
     def services(self, name, exact_match=True):
@@ -80,7 +82,8 @@ class DFPLEClient():
 
     def get_secret_name(self, name):
         secret_name = self.get_secret_name_short(name)
-        secret_name += '-{}'.format(datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        secret_name += '-{}'.format(
+            datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
         logger.debug('get_secret_name {}'.format(secret_name))
         return secret_name
 
@@ -124,7 +127,8 @@ class DFPLEClient():
         for domain in domains:
             certs[domain] = []
 
-        logger.debug('Generating certificates domains:{} email:{} testing:{}'.format(domains, email, testing))
+        logger.debug('Generating certificates domains:{} email:{} testing:{}'.format(
+            domains, email, testing))
         error, created = self.certbot.update_cert(domains, email, testing)
 
         if error and not created:
@@ -141,26 +145,30 @@ class DFPLEClient():
             base_domain = domains[0]
 
             # generate combined certificate needed for haproxy
-            combined_path = os.path.join(self.certbot_folder, 'live', base_domain, "combined.pem")
+            combined_path = os.path.join(
+                self.certbot_folder, 'live', base_domain, "combined.pem")
             with open(combined_path, "w") as combined, \
-                 open(os.path.join(self.certbot_folder, 'live', base_domain, "privkey.pem"), "r") as priv, \
-                 open(os.path.join(self.certbot_folder, 'live', base_domain, "fullchain.pem"), "r") as fullchain:
+                    open(os.path.join(self.certbot_folder, 'live', base_domain, "privkey.pem"), "r") as priv, \
+                    open(os.path.join(self.certbot_folder, 'live', base_domain, "fullchain.pem"), "r") as fullchain:
 
                 combined.write(fullchain.read())
                 combined.write(priv.read())
-                logger.info('combined certificate generated into "{}".'.format(combined_path))
+                logger.info(
+                    'combined certificate generated into "{}".'.format(combined_path))
 
             # for each domain, create a symlink for main combined cert.
             for domain in domains:
                 cert_type, cert_extension = combined_cert_type
-                dest_file = os.path.join(self.certbot_folder, "{}.{}".format(domain, cert_extension))
+                dest_file = os.path.join(
+                    self.certbot_folder, "{}.{}".format(domain, cert_extension))
 
                 if os.path.exists(dest_file):
                     os.remove(dest_file)
 
                 # generate symlinks
                 os.symlink(
-                    os.path.join('./live', base_domain, "{}.pem".format(cert_type)),
+                    os.path.join('./live', base_domain,
+                                 "{}.pem".format(cert_type)),
                     dest_file)
 
                 certs[domain].append(dest_file)
@@ -168,7 +176,8 @@ class DFPLEClient():
         return certs, created
 
     def process(self, domains, email, version='1', testing=None):
-        logger.info('Letsencrypt support enabled, processing request: domains={} email={} testing={}'.format(','.join(domains), email, testing))
+        logger.info('Letsencrypt support enabled, processing request: domains={} email={} testing={}'.format(
+            ','.join(domains), email, testing))
 
         certs, created = self.generate_certificates(domains, email, testing)
 
@@ -181,7 +190,8 @@ class DFPLEClient():
 
             combined = [x for x in certs if '.pem' in x]
             if len(combined) == 0:
-                logger.error('Combined certificate not found. Check logs for errors.')
+                logger.error(
+                    'Combined certificate not found. Check logs for errors.')
                 # raise Exception to make a 500 response to dpf, and make it retry the request later.
                 raise Exception('Combined cert not found')
             combined = combined[0]
@@ -206,22 +216,26 @@ class DFPLEClient():
                 secret_combined_found = False
                 if len(self._secrets):
                     secret = self._secrets[-1]
-                    logger.debug('combined secret for {} found : {} list: {}'.format(domain, secret, self._secrets))
+                    logger.debug('combined secret for {} found : {} list: {}'.format(
+                        domain, secret, self._secrets))
                     secret_combined_found = True
 
                 # check that an already existing secret for the combined cert is attached to dfp service.
                 # secret_combined_attached = any([x['File']['Name'] == 'cert-{}'.format(domain) for x in self.secrets_dfp])
-                secret_combined_attached = any([x['File']['Name'] == 'cert-{}'.format(domain) for x in self.dfp_secrets])
+                secret_combined_attached = any(
+                    [x['File']['Name'] == 'cert-{}'.format(domain) for x in self.dfp_secrets])
 
-                logger.debug('cert_created={} secret_found={} secret_attached={}'.format(created, secret_combined_found, secret_combined_attached))
+                logger.debug('cert_created={} secret_found={} secret_attached={}'.format(
+                    created, secret_combined_found, secret_combined_attached))
 
                 if created or not secret_combined_found:
                     # create secret
                     secret_cert = '{}.pem'.format(domain)
-                    logger.info('creating secret for cert {}'.format(secret_cert))
+                    logger.info(
+                        'creating secret for cert {}'.format(secret_cert))
                     secret = self.secret_create(
-                            secret_cert,
-                            open(combined, 'rb').read())
+                        secret_cert,
+                        open(combined, 'rb').read())
                     self._secrets.append(secret)
 
                 if created or not secret_combined_attached:
@@ -229,7 +243,8 @@ class DFPLEClient():
                     logger.info('attaching secret {}'.format(secret.name))
 
                     # remove secrets already attached to the dfp service that are for the same domain.
-                    self.dfp_secrets = [x for x in self.dfp_secrets if not x['SecretName'].startswith(domain)]
+                    self.dfp_secrets = [
+                        x for x in self.dfp_secrets if not x['SecretName'].startswith(domain)]
 
                     # append the secret
                     secrets_changed = True
@@ -241,7 +256,7 @@ class DFPLEClient():
                             'UID': '0',
                             'GID': '0',
                             'Mode': 0}
-                        })
+                    })
 
         if secrets_changed:
             logger.debug('secrets changed, updating dfp service...')
