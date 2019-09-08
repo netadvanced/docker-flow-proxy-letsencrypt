@@ -17,7 +17,7 @@ class CertbotClient():
             'certbot_cloudflare_timeout')
 
         if self.challenge not in ("http", "dns", "cloudflare_dns"):
-            raise Exception('required argument "challenge" not set.')
+            raise Exception('required argument "challenge" not set or incorrect.')
         if self.challenge == "http" and self.webroot_path is None:
             raise Exception(
                 'required argument "webroot_path" not set. Required when using challenge "http"')

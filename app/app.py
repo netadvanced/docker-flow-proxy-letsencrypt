@@ -101,8 +101,9 @@ def reconfigure(version):
                 '&'.join(['{}={}'.format(k, v) for k, v in request.args.items()]))))
             if response.status_code == 200:
                 break
-        except Exception, e:
-            logger.error('Error while trying to forward request: {}'.format(e))
+        except Exception as err:
+            logger.error('Error while trying to forward request: {}'.format(err))
+
         logger.debug('waiting for retry')
         time.sleep(os.environ.get('RETRY_INTERVAL', 5))
 
